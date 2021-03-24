@@ -1,3 +1,4 @@
+import { Header } from 'components/Header';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 
@@ -13,6 +14,7 @@ function App({ Component, pageProps }: AppProps) {
           content="Bootcamp Ignite, chapter 03 aplicação da um app com Next, Primic, FaunaDB and Strapi"
         />
       </Head>
+      <Header />
       <Component {...pageProps} />
     </>
   );
