@@ -1,18 +1,7 @@
 {
   "name": "Ig-News",
   "short_name": "Ig-News",
-  "icons": [
-    {
-      "src": "/img/icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/img/icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
+  
   "background_color": "#06092B",
   "description": "Bootcamp Ignite, chapter 03 aplicação da um app com Next, ",
   "display": "fullscreen",
