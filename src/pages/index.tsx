@@ -1,3 +1,4 @@
+import { SubscriptionButton } from 'components/SubscribeButton';
 import Head from 'next/head';
 
 import styles from './home.module.scss';
@@ -18,6 +19,7 @@ const Home = () => {
             Get access to all the publications <br />
             <span> for $9.90 month</span>
           </p>
+          <SubscriptionButton />
         </section>
 
         <img src="/img/avatar.svg" alt="Girl coding" />
