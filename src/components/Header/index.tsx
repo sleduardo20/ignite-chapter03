@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { SignInButton } from 'components/SignInButton';
 import { ActiveLink } from 'components/ActiveLink';
 import styles from './styles.module.scss';

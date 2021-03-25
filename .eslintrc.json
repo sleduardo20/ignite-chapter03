@@ -36,6 +36,7 @@
         "no-unused-expressions":"off",
         "react/jsx-props-no-spreading": "off",
         "import/no-duplicates": "off",
+        "jsx-a11y/anchor-is-valid": "off",
         "@typescript-eslint/camelcase":"off",
         "import/no-unresolved": [
           2, 
