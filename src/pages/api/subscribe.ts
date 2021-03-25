@@ -1,17 +1,47 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
 import { stripe } from 'services/stripe';
+import { query as q } from 'faunadb';
+import { fauna } from '../../services/fauna';
 
-export default async (request: NextApiRequest, response: NextApiResponse) => {
-  if (request.method === 'POST') {
-    const session = await getSession({ request });
+type User = {
+  ref: {
+    id: string;
+  };
+  data: {
+    stripeCustumerId: string;
+  };
+};
 
-    const stripeCustumer = await stripe.customers.create({
-      email: session?.user.email,
-    });
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'POST') {
+    const session = await getSession({ req });
+
+    const user = await fauna.query<User>(
+      q.Get(q.Match(q.Index('user_by_email'), q.Casefold(session?.user.email))),
+    );
+
+    let customerId = user.data.stripeCustumerId;
+
+    if (!customerId) {
+      const stripeCustumer = await stripe.customers.create({
+        email: session?.user.email,
+        // metadata
+      });
+
+      await fauna.query(
+        q.Update(q.Ref(q.Collection('users'), user.ref.id), {
+          data: {
+            stripeCustumerId: stripeCustumer.id,
+          },
+        }),
+      );
+
+      customerId = stripeCustumer.id;
+    }
 
     const stripeCheckoutSection = await stripe.checkout.sessions.create({
-      customer: stripeCustumer.id,
+      customer: customerId,
       payment_method_types: ['card'],
       billing_address_collection: 'required',
       line_items: [
@@ -25,9 +55,9 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
       success_url: `${process.env.STRIPE_SUCCES_URL}`,
       cancel_url: `${process.env.STRIPE_CANCEL_URL}`,
     });
-    return response.status(200).json({ sessionId: stripeCheckoutSection.id });
+    return res.status(200).json({ sessionId: stripeCheckoutSection.id });
   }
 
-  response.setHeader('Allw', 'POST');
-  response.status(405).end('Method Not Allowed');
+  res.setHeader('Allow', 'POST');
+  res.status(405).end('Method Not Allowed');
 };
