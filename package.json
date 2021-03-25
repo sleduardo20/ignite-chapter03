@@ -13,6 +13,7 @@
     "build-storybook": "build-storybook --no-dll"
   },
   "dependencies": {
+    "@prismicio/client": "^4.0.0",
     "@stripe/stripe-js": "^1.13.2",
     "axios": "^0.21.1",
     "build": "^0.1.4",
