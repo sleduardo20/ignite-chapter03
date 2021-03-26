@@ -1,4 +1,4 @@
-import { GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import { session, useSession } from 'next-auth/client';
 
 import Head from 'next/head';
@@ -56,10 +56,14 @@ export const PostPreview = ({ post }: PostPreviewProps) => {
 
 export default PostPreview;
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [],
+    paths: [{ params: { slug: '' } }],
     fallback: 'blocking',
+    // opçoes do fallback:
+    // true: se o post não foi gerado, vai tentar gerar pelo lado do cliente
+    // false: se o post não foi gerado de forma estatica, vai retornar 404
+    // blocking: se o post não foi gerado, vai tentar gerar pelo lado do servidor
   };
 };
 
@@ -88,5 +92,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       post,
     },
+    revalidate: 60 * 30, // 30 minutos
   };
 };
